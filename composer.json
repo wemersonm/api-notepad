@@ -1,0 +1,21 @@
+{
+    "name": "wemerson/api-notepad",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wemersonm",
+            "email": "wemersonmoura02@gmail.com"
+        }
+    ],
+    "files":[
+        
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "firebase/php-jwt": "^6.8"
+    }
+}
