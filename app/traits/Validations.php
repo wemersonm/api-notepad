@@ -5,11 +5,10 @@ namespace app\traits;
 use app\models\Filters;
 use app\models\QueryBuilder;
 use app\supports\Request;
-use app\supports\Validate;
 
-class Validations
+
+trait Validations
 {
-    use Validate;
 
     private array $msgValidations = [];
 
@@ -56,7 +55,7 @@ class Validations
     }
     public function email(string $field)
     {
-        $value = filter_input(INPUT_POST, $field, FILTER_VALIDATE_EMAIL);
+        $value = filter_var(trim(Request::input($field)), FILTER_VALIDATE_EMAIL);
         if (!$value) {
             $this->msgValidations[$field][] = "Email invalido";
             return false;
@@ -77,7 +76,6 @@ class Validations
         }
         return $value;
     }
-
     public function min(string $field, string $number)
     {
         $value = trim(Request::input($field));
@@ -107,7 +105,6 @@ class Validations
         }
         return $value;
     }
-
     public function regex(string $field, string $pattern)
     {
         $value = trim(Request::input($field));
@@ -161,6 +158,12 @@ class Validations
             $this->msgValidations[$field][] = "O campo não corresponde";
             return false;
         }
+        return $value;
+    }
+    public function htmlentities(string $field)
+    {
+        $value = Request::input($field);
+        $value = htmlentities($value,ENT_QUOTES);
         return $value;
     }
 }

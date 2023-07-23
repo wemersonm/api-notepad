@@ -40,7 +40,7 @@ class Middleware
             }
 
             $intanceMiddleware = new $class;
-            $intanceMiddleware->execute();
+            return $intanceMiddleware->execute();
         }
     }
 }

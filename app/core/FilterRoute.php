@@ -36,10 +36,12 @@ class FilterRoute
     public function dynamicURL(): ?array
     {
         foreach ($this->routes as $key => $route) {
-            $regex = str_replace("/", "\/", trim($route['uri'], "/"));
-            $uri = $this->uri;
-            if (preg_match("/^$regex$/", trim($uri, "/"))) {
-                return $route;
+            if ($this->request == $route['request']) {
+                $regex = str_replace("/", "\/", trim($route['uri'], "/"));
+                $uri = $this->uri;
+                if (preg_match("/^$regex$/", trim($uri, "/"))) {
+                    return $route;
+                }
             }
         }
         return null;
@@ -73,7 +75,7 @@ class FilterRoute
                     $route['uri'] = str_replace($wildcard, $regex, $route['uri']);
                 }
             }
-            if (isset($route['options']) && !empty($route['options']) && !empty($route['options']['prefix']) ) {
+            if (isset($route['options']) && !empty($route['options']) && !empty($route['options']['prefix'])) {
                 $route['uri'] = rtrim("/{$route['options']['prefix']}{$route['uri']}", "/");
             }
         }

@@ -11,7 +11,7 @@ class Filters
 
     public function where(string $field, string $operator, mixed $value, string $logic = "")
     {
-        $this->filter['where'][] = "{$field} {$operator} :{$field} {$logic}";
+        $this->filter['where'][] = "    {$field} {$operator} :{$field} {$logic} ";
         $this->values[$field] =  $value;
         return $this;
     }
@@ -60,7 +60,7 @@ class Filters
 
         $this->query .= isset($this->filter['orderby']) ? $this->filter['orderby'] : "";
         $this->query .= isset($this->filter['limit']) ? $this->filter['orderby'] : "";
-        
+
         return $this->query;
     }
 
@@ -72,5 +72,12 @@ class Filters
     public function getQuery()
     {
         return $this->query;
+    }
+    public function reset()
+    {
+        $this->values = [];
+        $this->filter = [];
+        $this->query = "";
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace app\core;
 
 use app\supports\Middleware;
 use Exception;
+use stdClass;
 
 class Controller
 {
@@ -20,17 +21,17 @@ class Controller
         if (!method_exists($instanceController, $method)) {
             throw new Exception("O método {$method} não existe !");
         };
-        $params = '';
+        $params = null;
         if (isset($route['uri']) && !empty($route['uri'])) {
             $params = $routes->getParams($route['uri'], $route['paramAliases']);
         }
-
+        $dataJWT = null;
         if (!empty($route['options']) && isset($route['options']['middlewares'])) {
-           
-            (new Middleware($route['options']['middlewares']))->execute();
+            $dataJWT =  (new Middleware($route['options']['middlewares']))->execute();
         }
-
-
+        if (!is_null($dataJWT)) {
+            $instanceController->setDataJWT($dataJWT);
+        }
         call_user_func_array([$instanceController, $method], [$params]);
     }
 

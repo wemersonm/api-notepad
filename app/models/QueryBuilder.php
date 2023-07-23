@@ -43,6 +43,7 @@ class QueryBuilder
         $this->fields = "*";
         $this->table = "";
         $this->values = [];
+        return $this;
     }
 
     public function selectAll(): array
@@ -84,7 +85,7 @@ class QueryBuilder
 
     public function delete()
     {
-        if (empty($this->queryFilter) && empty($this->values)) {
+        if (empty(trim($this->queryFilter)) || empty($this->values)) {
             throw new Exception("Condição e valores necessarios");
         }
 

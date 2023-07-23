@@ -2,9 +2,12 @@
 
 namespace app\supports;
 
-trait Validate
+use app\traits\Validations;
+
+class Validate
 {
 
+    use Validations;
     private array $dataValidations = [];
 
     public function validations(array $validations)
@@ -30,10 +33,9 @@ trait Validate
                 }
             }
         }
-        return [$this->dataValidations, $this->msgValidations];
         if (in_array(false, $this->dataValidations, true)) {
-            return false;
+            return ['validations' => false, 'msgError' => $this->msgValidations];
         }
-        return $this->dataValidations;
+        return  ['validations' => true, 'data' => $this->dataValidations];
     }
 }

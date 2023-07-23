@@ -4,32 +4,29 @@ namespace app\supports;
 
 class Request
 {
-
     public static function all()
     {
-        $requestMethods = ['PUT', 'DELETE', 'PATCH', 'OPTIONS'];
-        if (in_array(self::getRequestMethod(), $requestMethods)) {
-            return file_get_contents('php://input');
+        $data = [];
+        if (self::getContentType() == 'application/x-www-form-urlencoded') {
+            $data = !empty($_POST) ? $_POST : (!empty($_GET) ? $_GET : null);
         }
         if (self::getContentType() == 'application/json') {
-            return self::getRequestMethod() == 'POST' ? file_get_contents('php://input') : null;
+            $data =  self::json_decode(file_get_contents('php://input')) ?? null;
         }
-        return self::getRequestMethod() == 'GET' ? $_GET : (self::getRequestMethod() == "POST" ? $_POST : null);
+
+        return $data;
     }
     public static function input(string $key)
     {
-        if (self::getContentType() == 'application/json') {
-            $data = self::json_decode(file_get_contents('php://input'));
-            return $data[$key];
-        }
-
-        return isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : null);
+        $data = [];
+        $data =  self::json_decode(file_get_contents('php://input')) ?? null;
+        return isset($data[$key]) ? $data[$key] : null;
     }
     public static function only(array $keys)
     {
         $data = self::all() ?? null;
         if ($data != null) {
-            $dataKeys = array_keys($data);
+            $dataKeys = array_keys(self::json_decode($data));
             foreach ($dataKeys as $index => $key) {
                 if (!in_array($key, $keys)) {
                     unset($data[$key]);
